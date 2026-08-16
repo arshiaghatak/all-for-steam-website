@@ -11,7 +11,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         &ldquo;
       </span>
       <div className="flex flex-1 items-center pt-8">
-        <p className="text-balance text-sm leading-relaxed text-mist-200">
+        <p className="text-balance text-center text-sm leading-relaxed text-mist-200">
           {testimonial.quote}
         </p>
       </div>
