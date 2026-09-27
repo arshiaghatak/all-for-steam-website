@@ -5,16 +5,44 @@ import { FloatingField } from "../components/FloatingField";
 import { MagneticButton } from "../components/MagneticButton";
 import { StayConnected } from "../components/StayConnected";
 
+// Web3Forms delivers submissions straight to allforsteamorg@gmail.com. This
+// key only identifies which inbox to deliver to — it's meant to ship in
+// public frontend code, not a secret.
+const WEB3FORMS_ACCESS_KEY = "da618c89-7b99-4d68-a3dc-c82e12a822bb";
+
+type SubmitStatus = "idle" | "sending" | "success" | "error";
+
 export function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<SubmitStatus>("idle");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Message from ${form.name || "the All For STEAM website"}`);
-    const body = encodeURIComponent(
-      `${form.message}\n\nFrom: ${form.name} (${form.email})`
-    );
-    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+    if (status === "sending") return;
+    setStatus("sending");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `Message from ${form.name || "the All For STEAM website"}`,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -88,11 +116,23 @@ export function Contact() {
               onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
             />
             <div className="mt-6 flex items-center justify-between gap-4">
-              <p className="text-xs text-mist-500">
-                Opens your email client with this pre-filled.
+              <p
+                className={`text-xs ${
+                  status === "success"
+                    ? "text-teal-300"
+                    : status === "error"
+                      ? "text-red-400"
+                      : "text-mist-500"
+                }`}
+              >
+                {status === "success"
+                  ? "Message sent — we'll get back to you soon."
+                  : status === "error"
+                    ? `Something went wrong. Please email us directly at ${links.email}.`
+                    : "We typically respond within a few days."}
               </p>
-              <MagneticButton type="submit">
-                Submit <span aria-hidden="true">→</span>
+              <MagneticButton type="submit" disabled={status === "sending"}>
+                {status === "sending" ? "Sending..." : "Submit"} <span aria-hidden="true">→</span>
               </MagneticButton>
             </div>
           </form>

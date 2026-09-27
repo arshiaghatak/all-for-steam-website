@@ -11,6 +11,7 @@ interface MagneticButtonProps {
   target?: string;
   rel?: string;
   type?: "button" | "submit";
+  disabled?: boolean;
 }
 
 /**
@@ -27,12 +28,13 @@ export function MagneticButton({
   target,
   rel,
   type = "button",
+  disabled = false,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
 
   const handleMouseMove = (e: MouseEvent) => {
     const el = ref.current;
-    if (!el || window.matchMedia("(pointer: coarse)").matches) return;
+    if (!el || disabled || window.matchMedia("(pointer: coarse)").matches) return;
     const rect = el.getBoundingClientRect();
     const x = e.clientX - (rect.left + rect.width / 2);
     const y = e.clientY - (rect.top + rect.height / 2);
@@ -61,7 +63,7 @@ export function MagneticButton({
     ghost: "text-mist-50 hover:text-teal-300",
   };
 
-  const classes = `${base} ${variants[variant]} ${className}`;
+  const classes = `${base} ${variants[variant]} ${disabled ? "pointer-events-none opacity-50" : ""} ${className}`;
 
   const props = {
     ref: ref as never,
@@ -85,7 +87,7 @@ export function MagneticButton({
   }
 
   return (
-    <button type={type} onClick={onClick} {...props}>
+    <button type={type} onClick={onClick} disabled={disabled} {...props}>
       {children}
     </button>
   );
