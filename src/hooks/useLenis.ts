@@ -24,6 +24,14 @@ export function getLenis() {
  */
 export function useLenis() {
   useEffect(() => {
+    // Custom fonts (Playfair Display SC) can still be loading when a page's
+    // scroll-reveal animations first calculate their trigger positions,
+    // so ScrollTrigger measures a shorter, pre-font layout and can fire a
+    // reveal immediately instead of waiting for the real scroll position.
+    // Refreshing once fonts settle re-syncs every trigger to the final
+    // layout (GSAP's documented fix for this exact race condition).
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
