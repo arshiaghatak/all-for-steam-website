@@ -20,7 +20,11 @@ function groupByYear(items: Opportunity[]) {
     if (!byYear.has(item.year)) byYear.set(item.year, []);
     byYear.get(item.year)!.push(item);
   }
-  return [...byYear.entries()].sort((a, b) => Number(b[0]) - Number(a[0]));
+  // Reverse each year's list so cards render most-recent-first (top-left)
+  // to least-recent-last (bottom), without touching the underlying data.
+  return [...byYear.entries()]
+    .map(([year, yearItems]) => [year, [...yearItems].reverse()] as [string, Opportunity[]])
+    .sort((a, b) => Number(b[0]) - Number(a[0]));
 }
 
 interface InfoBannerData {
@@ -223,8 +227,8 @@ export function Opportunities() {
         <div className="mx-auto max-w-6xl px-6 sm:px-8">
           <div className="mb-16 grid gap-6 lg:grid-cols-2">
             <InfoBanner data={tutorBanner} />
-            <InfoBanner data={talkToMeBanner} />
-            <InfoBanner data={tutoringRequestBanner} className="lg:col-span-2" />
+            <InfoBanner data={tutoringRequestBanner} />
+            <InfoBanner data={talkToMeBanner} className="lg:col-span-2" />
           </div>
 
           <div ref={listRef} className="space-y-16">
