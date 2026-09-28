@@ -5,6 +5,7 @@ import { AnnouncementBanner } from "./components/AnnouncementBanner";
 import { Nav } from "./components/Nav";
 import { Footer } from "./components/Footer";
 import { ScrollManager } from "./components/ScrollManager";
+import { OrganizationSchema } from "./components/OrganizationSchema";
 import { Home } from "./pages/Home";
 
 // Home ships eagerly (it's the landing experience); the rest split into
@@ -22,6 +23,7 @@ export default function App() {
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-clip">
+      <OrganizationSchema />
       <ScrollManager />
       <AnnouncementBanner />
       <Nav />

@@ -12,6 +12,7 @@ import {
 import { PageHero } from "../components/PageHero";
 import { MagneticButton } from "../components/MagneticButton";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -198,6 +199,27 @@ export function Opportunities() {
     "Opportunities | All For STEAM",
     "Tutoring applications, live workshops, and everything in between, organized so you always know what's open now and what we've run before."
   );
+
+  // Labels every named workshop/camp as its own Course entity so searches
+  // for a specific workshop's name can be tied back to All For STEAM.
+  useJsonLd("workshops-schema", {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: opportunities.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Course",
+        name: item.name,
+        description: item.description ?? `${item.category} led by All For STEAM (${item.date}).`,
+        provider: {
+          "@type": "Organization",
+          name: "All For STEAM",
+          sameAs: "https://allforsteam.org",
+        },
+      },
+    })),
+  });
 
   const listRef = useRef<HTMLDivElement>(null);
   const grouped = useMemo(() => groupByYear(opportunities), []);
