@@ -4,10 +4,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { mission, links } from "../data/content";
 import { PageHero } from "../components/PageHero";
 import { MagneticButton } from "../components/MagneticButton";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Mission() {
+  usePageMeta("Our Mission | All For STEAM", mission.body);
+
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

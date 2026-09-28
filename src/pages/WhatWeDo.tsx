@@ -3,10 +3,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { programs, whatWeDo } from "../data/content";
 import { PageHero } from "../components/PageHero";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function WhatWeDo() {
+  usePageMeta("What We Do | All For STEAM", whatWeDo.body);
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

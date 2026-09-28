@@ -4,6 +4,7 @@ import { PageHero } from "../components/PageHero";
 import { FloatingField } from "../components/FloatingField";
 import { MagneticButton } from "../components/MagneticButton";
 import { StayConnected } from "../components/StayConnected";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 // Web3Forms delivers submissions straight to allforsteamorg@gmail.com. This
 // key only identifies which inbox to deliver to — it's meant to ship in
@@ -13,6 +14,8 @@ const WEB3FORMS_ACCESS_KEY = "da618c89-7b99-4d68-a3dc-c82e12a822bb";
 type SubmitStatus = "idle" | "sending" | "success" | "error";
 
 export function Contact() {
+  usePageMeta("Contact | All For STEAM", `${contact.body} ${contact.subheading}`);
+
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<SubmitStatus>("idle");
 

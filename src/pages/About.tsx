@@ -6,10 +6,16 @@ import { PageHero } from "../components/PageHero";
 import { SectionHeading } from "../components/SectionHeading";
 import { TeamCard } from "../components/TeamCard";
 import { MagneticButton } from "../components/MagneticButton";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function About() {
+  usePageMeta(
+    "About Us | All For STEAM",
+    "All For STEAM started as a handful of high schoolers who wanted STEM education to feel possible for every kid, everywhere."
+  );
+
   const gridRef = useRef<HTMLDivElement>(null);
   const founder = team[0];
 

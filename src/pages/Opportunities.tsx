@@ -11,6 +11,7 @@ import {
 } from "../data/opportunities";
 import { PageHero } from "../components/PageHero";
 import { MagneticButton } from "../components/MagneticButton";
+import { usePageMeta } from "../hooks/usePageMeta";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -193,6 +194,11 @@ function OpportunityCard({ item }: { item: Opportunity }) {
 }
 
 export function Opportunities() {
+  usePageMeta(
+    "Opportunities | All For STEAM",
+    "Tutoring applications, live workshops, and everything in between, organized so you always know what's open now and what we've run before."
+  );
+
   const listRef = useRef<HTMLDivElement>(null);
   const grouped = useMemo(() => groupByYear(opportunities), []);
 
