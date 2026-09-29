@@ -4,11 +4,35 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { programs, whatWeDo } from "../data/content";
 import { PageHero } from "../components/PageHero";
 import { usePageMeta } from "../hooks/usePageMeta";
+import { useJsonLd } from "../hooks/useJsonLd";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function WhatWeDo() {
   usePageMeta("What We Do | All For STEAM", whatWeDo.body);
+
+  // Labels each core program (Tutoring, Workshops, STEM Competitions,
+  // Talk To Me) as a named Service so a search for any of those names is
+  // clearly tied to All For STEAM — these aren't in the opportunities
+  // list, they're the org's standing offerings.
+  useJsonLd("programs-schema", {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: programs.map((program, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Service",
+        name: program.title,
+        description: program.description,
+        provider: {
+          "@type": "Organization",
+          name: "All For STEAM",
+          sameAs: "https://allforsteam.org",
+        },
+      },
+    })),
+  });
 
   const gridRef = useRef<HTMLDivElement>(null);
 
